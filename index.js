@@ -10,7 +10,13 @@ const devtools = {
 	orientation: undefined,
 };
 
-const threshold = 170;
+// Dynamic threshold based on screen size to avoid false positives on unusual resolutions like 1920x1980
+const getThreshold = () => {
+	const minThreshold = 170;
+	const percentThreshold = Math.min(globalThis.screen.width, globalThis.screen.height) * 0.08;
+	return Math.max(minThreshold, percentThreshold);
+};
+const threshold = getThreshold();
 
 const emitEvent = (isOpen, orientation) => {
 	globalThis.dispatchEvent(new globalThis.CustomEvent('devtoolschange', {
